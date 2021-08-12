@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:viewmodels="clr-namespace:TaskApp.ViewModels" xmlns:custom="clr-namespace:TaskApp.Custom"
+             x:Class="TaskApp.MainPage"
+             Title="Inicio de sesión"
+             NavigationPage.HasBackButton="False">
+
+    <ContentPage.BindingContext>
+        <viewmodels:MainPageViewModel />
+    </ContentPage.BindingContext>
+    
+    <StackLayout>
+        <Label Text="Iniciar Sesion"
+               TextColor="#024A86"
+               FontAttributes="Bold"
+               FontSize="24"
+               CharacterSpacing="1.5"
+               HorizontalTextAlignment="Center"
+               Margin="20, 30, 20, 30"
+               TextTransform="Uppercase"/>
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Label Text="Correo: "
+                   FontSize="15"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"/>
+            <Entry Text="{Binding Email}"
+                   Grid.Column="1" 
+                   Keyboard="Email"/>
+        </Grid>
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Label Text="Contraseña: "
+                   FontSize="15"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"/>
+            <Entry Text="{Binding Password}"
+                   Grid.Column="1" 
+                   IsPassword="True"/>
+        </Grid>
+
+        <Frame OutlineColor="Red"
+               IsVisible="{Binding IsNotValidForm}"
+               Margin="20,0,20,15">
+            <Label Text="{Binding ErrorMessage}"
+                   FontSize="16"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center"/>
+        </Frame>
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <Button Text="Iniciar Sesion"
+                    Command="{Binding LogginCommand}"
+                    Grid.Column="0"
+                    BackgroundColor="#024A86"
+                    TextColor="White"/>
+
+            <Button Text="Crear usuario"
+                    Command="{Binding CreateAccountCommand}"
+                    Grid.Column="1"
+                    BackgroundColor="Green"
+                    TextColor="White"/>
+        </Grid>
+    </StackLayout>
+
+</ContentPage>

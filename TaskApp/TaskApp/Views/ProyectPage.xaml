@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:viewmodels="clr-namespace:TaskApp.ViewModels"
+             x:Class="TaskApp.Views.ProyectPage"
+             xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack" xmlns:custom="clr-namespace:TaskApp.Custom"
+             Title="Proyecto">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Mostrar Tareas Completadas"
+                     x:Name="tbiShowOrHide"
+                     Command="{Binding ShowOrHideTaskCompletedCommand}"
+                     CommandParameter="{x:Reference tbiShowOrHide}"
+                     Icon="IconCompleteWhite.png"/>
+        <ToolbarItem Text="Agregar Tarea"
+                     Command="{Binding CreateTaskPageCommand}"
+                     Icon="IconAdd.png"/>
+    </ContentPage.ToolbarItems>
+    
+    <ContentPage.Content>
+        <StackLayout
+            Padding="10, 20, 10, 20">
+
+            <Label Text="{Binding ProyectName, StringFormat='Proyecto: {0}'}" 
+                   FontSize="22"
+                   HorizontalTextAlignment="Center"
+                   TextColor="#024A86"
+                   FontAttributes="Bold"/>
+
+            <Frame IsVisible="{Binding IsEmptyList}"
+                   Margin="20, 160, 20, 0">
+                <Label Text="Actualmente, no tienes tareas por hacer en este proyecto."
+                       TextColor="#024A86"
+                       FontSize="18"
+                       FontAttributes="Bold"/>
+            </Frame>
+            
+            <ListView ItemsSource="{Binding TasksList}"
+                      HasUnevenRows="True"
+                      x:Name="listView"
+                      IsVisible="{Binding IsFullList}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <custom:CustomViewCell>
+                            <StackLayout Orientation="Horizontal"
+                                         Padding="10">
+                                <CheckBox IsChecked="{Binding IsChecked}"
+                                          x:Name="Che"
+                                          Color="#024A86"
+                                          >
+                                    <CheckBox.Behaviors>
+                                        <behaviorsPack:EventToCommandBehavior 
+                                            EventName="CheckedChanged"
+                                            Command="{Binding Source={x:Reference listView}, Path=BindingContext.UpdateTaskCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                    </CheckBox.Behaviors>
+                                </CheckBox>
+                                <Label Text="{Binding Title}"
+                                       VerticalTextAlignment="Center"
+                                       FontSize="18"
+                                       TextColor="Black"/>
+                            </StackLayout>
+                        </custom:CustomViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

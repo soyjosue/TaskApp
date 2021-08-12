@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:viewmodels="clr-namespace:TaskApp.ViewModels"
+             x:Class="TaskApp.Views.CreateProyectsPage"
+             Title="Crear Proyecto">
+    <ContentPage.BindingContext>
+        <viewmodels:CreateProyectPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+            <StackLayout>
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Nombre: "
+                       FontSize="18"
+                       TextColor="Black"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center"/>
+                <Entry Text="{Binding Title}"
+                       Grid.Column="1" 
+                       Keyboard="Text" />
+            </Grid>
+
+            <Frame OutlineColor="Red"
+                   IsVisible="{Binding IsNotValidForm}"
+                   Margin="20,0,20,15">
+                <Label Text="El nombre del proyecto es obligatorio."
+                       FontSize="16"
+                       HorizontalTextAlignment="Center"/>
+            </Frame>
+
+            <Button Text="Crear Proyecto"
+                    Command="{Binding SaveProyectCommand}"
+                    BackgroundColor="#024A86"
+                    TextColor="White"/>
+            </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
