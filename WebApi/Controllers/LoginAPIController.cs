@@ -7,6 +7,7 @@ using System.Web.Http;
 using WebApi.Data;
 using WebApi.Helper;
 using WebApi.Models;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebApi.Controllers
 {
@@ -32,7 +33,7 @@ namespace WebApi.Controllers
                         where us.Email == loginUser.Email
                         select us).FirstOrDefault();
 
-            if(user?.Password != Encrypt.GetPasswordEncrypt(loginUser.Password))
+            if(user == null || !BC.Verify(loginUser.Password, user.Password))
             {
                 return BadRequest("Contraseña incorrecta o Usuario no existe");
             }

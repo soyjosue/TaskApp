@@ -10,15 +10,16 @@ namespace WebApi.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        [Display(Name = "Nombre")]
         public string Name { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El apellido es obligatorio")]
         public string Lastname { get; set; }
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "El correo es obligatorio")]
+        [EmailAddress(ErrorMessage = "Debe colocar un correo invalido")]
         public string Email { get; set; }
-        [Required]
-        [MinLength(6)]
+        [Required(ErrorMessage = "La contraseña es obligatoria")]
+        [MinLength(6, ErrorMessage = "La contraseña debe ser más de 6 caracteres")]
         public string Password { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace WebApi.Migrations
         {
             AutomaticMigrationsEnabled = true;
             ContextKey = "WebApi.Data.TaskWebApiContext";
-            //AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(WebApi.Data.TaskWebApiContext context)

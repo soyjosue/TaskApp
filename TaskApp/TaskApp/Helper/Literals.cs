@@ -6,8 +6,8 @@ namespace TaskApp.Helper
 {
     public static class Literals
     {
-        public static string WEBAPIKEY = "http://192.168.100.43/APITASKAPP/api";
-        // public static string WEBAPIKEY = "http://10.0.0.9/APITASKAPP/api";
+        // public static string WEBAPIKEY = "https://webapi20210812114844.azurewebsites.net/api";
+        public static string WEBAPIKEY = "http://10.0.0.6:44373/api";
 
         // -- Message Literals --
         public static string GoToLoginPage = "GoToLoginPage";

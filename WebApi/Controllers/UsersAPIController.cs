@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using WebApi.Data;
 using WebApi.Helper;
 using WebApi.Models;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebApi.Controllers
 {
@@ -67,26 +68,12 @@ namespace WebApi.Controllers
                 return BadRequest("Existe un usuario con ese correo.");
             }
 
-            user.Password = Encrypt.GetPasswordEncrypt(user.Password);
+            user.Password = BC.HashPassword(user.Password);
 
             db.Users.Add(user);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool UserExists(int id)
-        {
-            return db.Users.Count(e => e.Id == id) > 0;
         }
     }
 }

@@ -10,9 +10,9 @@ namespace WebApi.Models
     public class Task
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
         public bool IsChecked { get; set; }
-
         public string ProyectId{ get; set; }
         public string UserId { get; set; }
     }
