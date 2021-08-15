@@ -70,11 +70,24 @@ namespace TaskApp.ViewModels
         public string ErrorMessage
         {
             get { return errorMessage; }
-            set { errorMessage = value;
+            set
+            {
+                errorMessage = value;
                 OnPropertyChanged();
             }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand CreateUserCommand { get; set; }
 
@@ -87,6 +100,7 @@ namespace TaskApp.ViewModels
         {
             ErrorMessage = "";
             IsNotValidForm = false;
+            IsLoading = true;
 
             if (string.IsNullOrEmpty(Name))
             {
@@ -118,7 +132,8 @@ namespace TaskApp.ViewModels
                     IsNotValidForm = true;
 
                 ErrorMessage += "- La contraseña es obligatorio";
-            } else if(Password.Length < 6)
+            }
+            else if (Password.Length < 6)
             {
                 if (IsNotValidForm)
                     ErrorMessage += "\n";
@@ -126,7 +141,8 @@ namespace TaskApp.ViewModels
                     IsNotValidForm = true;
 
                 ErrorMessage += "- La contraseña debe ser mayor a 6 caracteres";
-            } else if(Password != Repetir)
+            }
+            else if (Password != Repetir)
             {
                 if (IsNotValidForm)
                     ErrorMessage += "\n";
@@ -137,7 +153,10 @@ namespace TaskApp.ViewModels
             }
 
             if (IsNotValidForm)
+            {
+                IsLoading = false;
                 return;
+            }
 
             IsNotValidForm = false;
 
@@ -149,7 +168,7 @@ namespace TaskApp.ViewModels
                 Password = this.Password
             };
 
-            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/usersapi");
+            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/UserApi/Create");
 
             var client = new HttpClient();
 
@@ -157,12 +176,14 @@ namespace TaskApp.ViewModels
 
             var response = await client.PostAsync(requestUri, convertJson);
 
-            if (response.StatusCode == HttpStatusCode.Created)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
+                IsLoading = false;
                 MessagingCenter.Send(this, Literals.GoToLoginPage);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
+                IsLoading = false;
                 IsNotValidForm = true;
                 ErrorMessage += "- El correo es utilizado por otro usuario.";
             }

@@ -27,7 +27,6 @@ namespace TaskApp
             {
                 await Navigation.PushAsync(new CreateUserPage());
             });
-
         }
     }
 }

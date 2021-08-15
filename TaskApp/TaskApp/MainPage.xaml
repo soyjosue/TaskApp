@@ -64,7 +64,13 @@
                    VerticalTextAlignment="Center"/>
         </Frame>
 
-        <Grid Margin="10">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                           IsRunning="{Binding IsLoading}"
+                           Color="#024A86"
+                           Margin="0, 0, 0, 10" />
+
+        <Grid Margin="10"
+              IsEnabled="{Binding IsEnabled}">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -83,7 +89,7 @@
                     Command="{Binding CreateAccountCommand}"
                     Grid.Column="1"
                     BackgroundColor="Green"
-                    TextColor="White"/>
+                    TextColor="White" />
         </Grid>
     </StackLayout>
 

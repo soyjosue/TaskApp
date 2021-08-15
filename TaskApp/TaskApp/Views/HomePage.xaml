@@ -33,6 +33,14 @@
                        FontAttributes="Bold"/>
             </Frame>
 
+            <Frame IsVisible="{Binding IsFailedConection}"
+                   Margin="20, 160, 20, 0">
+                <Label Text="No tiene conexión con el servidor, intente denuevo."
+                       TextColor="#024A86"
+                       FontSize="18"
+                       FontAttributes="Bold"/>
+            </Frame>
+
             <ListView ItemsSource="{Binding ProyectsList}"
                   HasUnevenRows="True"
                   ItemTapped="ListView_ItemTapped"

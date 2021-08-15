@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Windows.Input;
 using TaskApp.Helper;
+using TaskApp.Models;
 using WebApi.Models;
 using Xamarin.Forms;
 
@@ -37,8 +38,29 @@ namespace TaskApp.ViewModels
             }
         }
 
-        public ICommand LogginCommand { get; set; }
-        public ICommand CreateAccountCommand { get; set; }
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isEnabled;
+
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool isNotValidForm = false;
 
@@ -64,37 +86,20 @@ namespace TaskApp.ViewModels
             }
         }
 
+        public ICommand LogginCommand { get; set; }
+        public ICommand CreateAccountCommand { get; set; }
 
         public MainPageViewModel()
         {
             LogginCommand = new Command(LogginCommandExecute);
             CreateAccountCommand = new Command(CreateAccountCommandExecute);
-
-            //GetUserLogin();
-        }
-
-        private void GetUserLogin()
-        {
-            var properties = Application.Current.Properties;
-
-            foreach (var item in properties)
-            {
-                if (item.Key == Literals.EMAIL)
-                {
-                    Email = item.Value.ToString();
-                }
-
-                if (item.Key == Literals.PASSWORD)
-                {
-                    Password = item.Value.ToString();
-                }
-            }
-
-            LogginCommandExecute();
+            IsEnabled = true;
         }
 
         private async void LogginCommandExecute()
         {
+            IsLoading = true;
+            IsEnabled = false;
             ErrorMessage = "";
             IsNotValidForm = false;
 
@@ -113,7 +118,8 @@ namespace TaskApp.ViewModels
                     IsNotValidForm = true;
 
                 ErrorMessage += "- La contraseña es obligatorio.";
-            } else if (Password.Length < 6)
+            }
+            else if (Password.Length < 6)
             {
                 if (IsNotValidForm)
                     ErrorMessage += "\n";
@@ -126,7 +132,11 @@ namespace TaskApp.ViewModels
             }
 
             if (IsNotValidForm)
+            {
+                IsLoading = false;
+                IsEnabled = true;
                 return;
+            }
 
 
             IsNotValidForm = false;
@@ -137,7 +147,7 @@ namespace TaskApp.ViewModels
                 Password = this.Password
             };
 
-            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/loginapi");
+            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/UserApi/Login");
 
             var client = new HttpClient();
 
@@ -150,18 +160,29 @@ namespace TaskApp.ViewModels
                 var convert = await response.Content.ReadAsStringAsync();
                 var items = JsonConvert.DeserializeObject<JsonUserId>(convert);
 
-                Application.Current.Properties[Literals.TOKEN] = items.Id;
-                Application.Current.Properties[Literals.EMAIL] = Email;
-                Application.Current.Properties[Literals.PASSWORD] = Password;
+                var config = new ConfigUser();
+
+                config.Key = Literals.TOKEN;
+                config.Value = items.Token;
+                await App.SQLiteDB.SaveConfigAsync(config);
 
                 MessagingCenter.Send(this, Literals.GoToHomePage);
             }
             else if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 IsNotValidForm = true;
-                ErrorMessage += "- Contraseña o correo incorrecto.";
+                ErrorMessage = "";
+                ErrorMessage += "Contraseña o correo incorrecto.";
+            }
+            else
+            {
+                IsNotValidForm = true;
+                ErrorMessage = "";
+                ErrorMessage += "No hay conexión con el servidor.";
             }
 
+            IsLoading = false;
+            IsEnabled = true;
         }
 
         private void CreateAccountCommandExecute()
@@ -172,6 +193,6 @@ namespace TaskApp.ViewModels
 
     public class JsonUserId
     {
-        public string Id { get; set; }
+        public string Token { get; set; }
     }
 }

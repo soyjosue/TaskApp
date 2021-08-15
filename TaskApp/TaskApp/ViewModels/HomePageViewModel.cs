@@ -17,10 +17,9 @@ namespace TaskApp.ViewModels
     {
         public HomePageViewModel()
         {
-            Token = Application.Current.Properties[Literals.TOKEN].ToString();
+            Token = App.SQLiteDB.GetValueConfigUser(Literals.TOKEN);
 
             GetProyectsListAsync();
-
 
             LogOutCommand = new Command(LogOutCommandExecute);
             CreateProyectCommand = new Command(CreateProyectCommandExecute);
@@ -73,6 +72,14 @@ namespace TaskApp.ViewModels
             }
         }
 
+        private bool isFailedConection;
+
+        public bool IsFailedConection
+        {
+            get { return isFailedConection; }
+            set { isFailedConection = value; }
+        }
+
 
         public ICommand LogOutCommand { get; set; }
         public ICommand CreateProyectCommand { get; set; }
@@ -112,7 +119,7 @@ namespace TaskApp.ViewModels
 
             if (resultMessageConfirm)
             {
-                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/proyects/{proyect.Id}");
+                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi/Delete/{proyect.Id}");
 
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Add(Literals.TOKEN, Token);
@@ -122,6 +129,16 @@ namespace TaskApp.ViewModels
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     GetProyectsListAsync();
+                }
+                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+
+                    MessagingCenter.Send(this, Literals.GoToLoginPage);
+                }
+                else
+                {
+                    IsFailedConection = true;
                 }
             }
 
@@ -134,11 +151,7 @@ namespace TaskApp.ViewModels
 
             if (resultAlert)
             {
-                var properties = Application.Current.Properties;
-
-                properties.Remove(Literals.TOKEN);
-                properties.Remove(Literals.EMAIL);
-                properties.Remove(Literals.PASSWORD);
+                await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
 
                 MessagingCenter.Send(this, Literals.GoToLoginPage);
             }
@@ -147,7 +160,7 @@ namespace TaskApp.ViewModels
 
         private async void GetProyectsListAsync()
         {
-            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/proyects");
+            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi");
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add(Literals.TOKEN, Token);
@@ -167,7 +180,14 @@ namespace TaskApp.ViewModels
                     IsFullList = false;
                     IsEmptyList = true;
                 }
+            } else if(response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
 
+                MessagingCenter.Send(this, Literals.GoToLoginPage);
+            } else
+            {
+                IsFailedConection = true;
             }
         }
     }

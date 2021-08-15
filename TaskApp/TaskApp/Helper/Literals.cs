@@ -6,8 +6,7 @@ namespace TaskApp.Helper
 {
     public static class Literals
     {
-        // public static string WEBAPIKEY = "https://webapi20210812114844.azurewebsites.net/api";
-        public static string WEBAPIKEY = "http://10.0.0.6:44373/api";
+        public static string WEBAPIKEY = "http://taskappb.azurewebsites.net/api";
 
         // -- Message Literals --
         public static string GoToLoginPage = "GoToLoginPage";
@@ -19,7 +18,7 @@ namespace TaskApp.Helper
         public static string CheckBoxCheckedChanged = "CheckBoxCheckedChanged";
 
         // APPLICATION ELEMENTS
-        public static string TOKEN = "token";
+        public static string TOKEN = "Authorization";
         public static string EMAIL = "email";
         public static string PASSWORD = "password";
     }

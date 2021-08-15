@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace TaskApp.Droid
 {
-    [Activity(Label = "SplashActivity", MainLauncher = true, Theme = "@style/MainTheme.Splash", NoHistory = true)]
+    [Activity(Label = "TasksApp", MainLauncher = true, Theme = "@style/MainTheme.Splash", NoHistory = true)]
     public class SplashActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)
