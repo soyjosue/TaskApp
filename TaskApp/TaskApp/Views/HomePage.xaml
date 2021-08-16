@@ -22,13 +22,18 @@
             <Label Text="Proyectos" 
                    FontSize="22"
                    HorizontalTextAlignment="Center"
-                   TextColor="#024A86"
+                   TextColor="{x:StaticResource Key=PrimaryColor}"
                    FontAttributes="Bold"/>
-            
+
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
+                           IsRunning="{Binding IsLoading}"
+                           Color="{x:StaticResource Key=PrimaryColor}"
+                           Margin="0, 0, 0, 10" />
+
             <Frame IsVisible="{Binding IsEmptyList}"
                    Margin="20, 160, 20, 0">
                 <Label Text="No tienes proyectos creados, actualmente."
-                       TextColor="#024A86"
+                       TextColor="{x:StaticResource Key=PrimaryColor}"
                        FontSize="18"
                        FontAttributes="Bold"/>
             </Frame>
@@ -36,7 +41,7 @@
             <Frame IsVisible="{Binding IsFailedConection}"
                    Margin="20, 160, 20, 0">
                 <Label Text="No tiene conexión con el servidor, intente denuevo."
-                       TextColor="#024A86"
+                       TextColor="{x:StaticResource Key=PrimaryColor}"
                        FontSize="18"
                        FontAttributes="Bold"/>
             </Frame>

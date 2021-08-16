@@ -7,9 +7,10 @@
     <ContentPage.BindingContext>
         <viewmodels:CreateUserViewModel />
     </ContentPage.BindingContext>
-
     <StackLayout>
-        <Label Text="Create User"
+    <ScrollView>
+        <StackLayout>
+            <Label Text="Create User"
                TextColor="#024A86"
                FontAttributes="Bold"
                FontSize="24"
@@ -18,119 +19,122 @@
                Margin="20, 30, 20, 30"
                TextTransform="Uppercase"/>
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Label Text="Nombre: "
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Nombre: "
                    FontSize="15"
                    TextColor="Black"
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding Name}"
+                <Entry Text="{Binding Name}"
                    Grid.Column="1" 
                    Keyboard="Text"
                    Placeholder="Tu Nombre"/>
-        </Grid>
+            </Grid>
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Label Text="Apellido: "
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Apellido: "
                    FontSize="15"
                    TextColor="Black"
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding Lastname}"
+                <Entry Text="{Binding Lastname}"
                    Grid.Column="1" 
                    Keyboard="Text"
                    Placeholder="Tu Apellido"/>
-        </Grid>
+            </Grid>
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Label Text="Correo: "
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Correo: "
                    FontSize="15"
                    TextColor="Black"
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding Email}"
+                <Entry Text="{Binding Email}"
                    Grid.Column="1" 
                    Keyboard="Email"
                    Placeholder="Tu Correo"/>
-        </Grid>
+            </Grid>
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Label Text="Contraseña: "
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Contraseña: "
                    FontSize="15"
                    TextColor="Black"
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding Password}"
+                <Entry Text="{Binding Password}"
                    Grid.Column="1" 
                    Placeholder="Tu Password"
                    IsPassword="True"/>
-        </Grid>
+            </Grid>
 
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
-            <Label Text="Repetir Contraseña: "
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="Repetir Contraseña: "
                    FontSize="15"
                    TextColor="Black"
                    FontAttributes="Bold"
                    VerticalTextAlignment="Center"/>
-            <Entry Text="{Binding Repetir}"
+                <Entry Text="{Binding Repetir}"
                    Grid.Column="1" 
                    Placeholder="Repetir passsword"
                    IsPassword="True"/>
-        </Grid>
+            </Grid>
 
-        <Frame OutlineColor="Red"
+            <Frame OutlineColor="Red"
                    IsVisible="{Binding IsNotValidForm}"
                    Margin="20,0,20,15">
-            <Label Text="{Binding ErrorMessage}"
+                <Label Text="{Binding ErrorMessage}"
                    FontSize="16"
                    HorizontalTextAlignment="Center"
                    VerticalTextAlignment="Center"/>
-        </Frame>
-
-        <ActivityIndicator IsVisible="{Binding IsLoading}"
+            </Frame>
+        </StackLayout>
+    </ScrollView>
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
                            IsRunning="{Binding IsLoading}"
                            Color="#024A86"
                            Margin="0, 0, 0, 20" />
 
-        <Button Text="Crear Usuario"
+            <Button Text="Crear Usuario"
+                    HeightRequest="50"
                 Command="{Binding CreateUserCommand}"
                 BackgroundColor="#024A86"
-                TextColor="White"/>
+                TextColor="White"
+                IsEnabled="{Binding IsEnabled}"/>
     </StackLayout>
 </ContentPage>
     

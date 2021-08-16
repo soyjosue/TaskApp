@@ -37,10 +37,10 @@ namespace TaskApp.ViewModels
         {
             var item = obj as ToolbarItem;
 
-            if(!ShowOrHideTaskCompleted)
+            if (!ShowOrHideTaskCompleted)
                 item.IconImageSource = ImageSource.FromFile("IconCompleteGreen.png");
             else
-                item.IconImageSource= ImageSource.FromFile("IconCompleteWhite.png");
+                item.IconImageSource = ImageSource.FromFile("IconCompleteWhite.png");
 
             ShowOrHideTaskCompleted = !ShowOrHideTaskCompleted;
 
@@ -99,6 +99,19 @@ namespace TaskApp.ViewModels
             }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ICommand CreateTaskPageCommand { get; }
         public ICommand UpdateTaskCommand { get; }
         public ICommand ShowOrHideTaskCompletedCommand { get; set; }
@@ -114,18 +127,27 @@ namespace TaskApp.ViewModels
             {
                 var task = obj as Task;
 
-                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/tasks/{task.Id}");
+                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/TaskApi/Edit/{task.Id}");
 
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Add(Literals.TOKEN, Utils.GetToken());
 
                 var json = Utils.ConvertJson(task);
 
-                await client.PutAsync(requestUri, json);
+                var response = await client.PutAsync(requestUri, json);
 
-                if(!ShowOrHideTaskCompleted)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    GetTaksListAsync();
+                    if (!ShowOrHideTaskCompleted)
+                    {
+                        GetTaksListAsync();
+                    }
+                }
+                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+
+                    MessagingCenter.Send(this, Literals.GoToLoginPage);
                 }
             }
 
@@ -133,7 +155,7 @@ namespace TaskApp.ViewModels
 
         private async void GetTaksListAsync()
         {
-            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/tasks/{IdProyect}");
+            Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/TaskApi/{IdProyect}");
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add(Literals.TOKEN, Utils.GetToken());
@@ -143,12 +165,13 @@ namespace TaskApp.ViewModels
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var tasks = JsonConvert.DeserializeObject<ObservableCollection<Task>>(await response.Content.ReadAsStringAsync())
-                    .Where(r => 
+                    .Where(r =>
                     {
-                        if(ShowOrHideTaskCompleted)
+                        if (ShowOrHideTaskCompleted)
                         {
                             return true;
-                        } else
+                        }
+                        else
                         {
                             return !r.IsChecked;
                         }
@@ -164,6 +187,12 @@ namespace TaskApp.ViewModels
                     IsFullList = false;
                     IsEmptyList = true;
                 }
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+
+                MessagingCenter.Send(this, Literals.GoToLoginPage);
             }
 
         }

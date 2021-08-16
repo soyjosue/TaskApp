@@ -153,28 +153,31 @@ namespace TaskApp.ViewModels
 
             StringContent json = Utils.ConvertJson(login);
 
-            var response = await client.PostAsync(requestUri, json);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                var convert = await response.Content.ReadAsStringAsync();
-                var items = JsonConvert.DeserializeObject<JsonUserId>(convert);
+                var response = await client.PostAsync(requestUri, json);
 
-                var config = new ConfigUser();
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var convert = await response.Content.ReadAsStringAsync();
+                    var items = JsonConvert.DeserializeObject<JsonUserId>(convert);
 
-                config.Key = Literals.TOKEN;
-                config.Value = items.Token;
-                await App.SQLiteDB.SaveConfigAsync(config);
+                    var config = new ConfigUser();
 
-                MessagingCenter.Send(this, Literals.GoToHomePage);
+                    config.Key = Literals.TOKEN;
+                    config.Value = items.Token;
+                    await App.SQLiteDB.SaveConfigAsync(config);
+
+                    MessagingCenter.Send(this, Literals.GoToHomePage);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    IsNotValidForm = true;
+                    ErrorMessage = "";
+                    ErrorMessage += "Contraseña o correo incorrecto.";
+                }
             }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
-            {
-                IsNotValidForm = true;
-                ErrorMessage = "";
-                ErrorMessage += "Contraseña o correo incorrecto.";
-            }
-            else
+            catch
             {
                 IsNotValidForm = true;
                 ErrorMessage = "";

@@ -36,6 +36,29 @@ namespace TaskApp.ViewModels
             }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string messageError;
+
+        public string MessageError
+        {
+            get { return messageError; }
+            set
+            {
+                messageError = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand SaveProyectCommand { get; set; }
 
@@ -46,6 +69,8 @@ namespace TaskApp.ViewModels
 
         private async void SaveProyectCommandExecute(object obj)
         {
+            IsLoading = true;
+
             if (!string.IsNullOrEmpty(Title))
             {
                 IsNotValidForm = false;
@@ -54,24 +79,41 @@ namespace TaskApp.ViewModels
                     Title = this.Title,
                 };
 
-                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/proyects/");
+                Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi/Create/");
 
                 var client = new HttpClient();
                 client.DefaultRequestHeaders.Add(Literals.TOKEN, Utils.GetToken());
 
                 var json = Utils.ConvertJson(proyect);
 
-                var response = await client.PostAsync(requestUri, json);
-
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    MessagingCenter.Send(this, Literals.GoToHomePage);
+                    var response = await client.PostAsync(requestUri, json);
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        MessagingCenter.Send(this, Literals.GoToHomePage);
+                    }
+                    else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+
+                        MessagingCenter.Send(this, Literals.GoToLoginPage);
+                    }
+                }
+                catch
+                {
+                    IsNotValidForm = true;
+                    MessageError = "No hay conexión con el servidor.";
                 }
             }
             else
             {
                 IsNotValidForm = true;
+                MessageError = "El nombre del proyecto es obligatorio.";
             }
+
+            IsLoading = false;
         }
     }
 }

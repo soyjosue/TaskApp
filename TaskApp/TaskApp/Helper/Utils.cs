@@ -20,7 +20,7 @@ namespace TaskApp.Helper
 
         public static string GetToken()
         {
-            return Application.Current.Properties[Literals.TOKEN].ToString();
+            return App.SQLiteDB.GetValueConfigUser(Literals.TOKEN);
         }
     }
 }

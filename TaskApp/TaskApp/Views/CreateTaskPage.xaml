@@ -27,10 +27,15 @@
             <Frame OutlineColor="Red"
                    IsVisible="{Binding IsNotValidForm}"
                    Margin="20,0,20,15">
-                <Label Text="El nombre de la tarea es obligatorio."
+                <Label Text="{Binding MessageError}"
                        FontSize="16"
                        HorizontalTextAlignment="Center"/>
             </Frame>
+
+            <ActivityIndicator IsVisible="{Binding IsLoading}"
+                           IsRunning="{Binding IsLoading}"
+                           Color="#024A86"
+                           Margin="0, 0, 0, 10" />
 
             <Button Text="Crear Tarea"
                     Command="{Binding SaveNewTaskCommand}"

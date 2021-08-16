@@ -89,6 +89,18 @@ namespace TaskApp.ViewModels
             }
         }
 
+        private bool isEnabled = true;
+
+        public bool IsEnabled
+        {
+            get { return isEnabled; }
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand CreateUserCommand { get; set; }
 
         public CreateUserViewModel()
@@ -101,6 +113,7 @@ namespace TaskApp.ViewModels
             ErrorMessage = "";
             IsNotValidForm = false;
             IsLoading = true;
+            IsEnabled = false;
 
             if (string.IsNullOrEmpty(Name))
             {
@@ -155,6 +168,7 @@ namespace TaskApp.ViewModels
             if (IsNotValidForm)
             {
                 IsLoading = false;
+                IsEnabled = true;
                 return;
             }
 
@@ -174,19 +188,28 @@ namespace TaskApp.ViewModels
 
             StringContent convertJson = Utils.ConvertJson(user);
 
-            var response = await client.PostAsync(requestUri, convertJson);
+            try
+            {
+                var response = await client.PostAsync(requestUri, convertJson);
 
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                IsLoading = false;
-                MessagingCenter.Send(this, Literals.GoToLoginPage);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    MessagingCenter.Send(this, Literals.GoToLoginPage);
+                }
+                else if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    IsNotValidForm = true;
+                    ErrorMessage = "";
+                    ErrorMessage += "- El correo es utilizado por otro usuario.";
+                }
             }
-            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            catch
             {
-                IsLoading = false;
                 IsNotValidForm = true;
-                ErrorMessage += "- El correo es utilizado por otro usuario.";
+                ErrorMessage = "No hay conexión con el servidor.";
             }
+                IsLoading = false;
+                IsEnabled = true;
         }
     }
 }

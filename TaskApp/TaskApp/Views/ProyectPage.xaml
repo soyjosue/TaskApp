@@ -23,13 +23,13 @@
             <Label Text="{Binding ProyectName, StringFormat='Proyecto: {0}'}" 
                    FontSize="22"
                    HorizontalTextAlignment="Center"
-                   TextColor="#024A86"
+                   TextColor="{x:StaticResource Key=PrimaryColor}"
                    FontAttributes="Bold"/>
 
             <Frame IsVisible="{Binding IsEmptyList}"
                    Margin="20, 160, 20, 0">
                 <Label Text="Actualmente, no tienes tareas por hacer en este proyecto."
-                       TextColor="#024A86"
+                       TextColor="{x:StaticResource Key=PrimaryColor}"
                        FontSize="18"
                        FontAttributes="Bold"/>
             </Frame>
@@ -45,7 +45,7 @@
                                          Padding="10">
                                 <CheckBox IsChecked="{Binding IsChecked}"
                                           x:Name="Che"
-                                          Color="#024A86"
+                                          Color="{x:StaticResource Key=PrimaryColor}"
                                           >
                                     <CheckBox.Behaviors>
                                         <behaviorsPack:EventToCommandBehavior 

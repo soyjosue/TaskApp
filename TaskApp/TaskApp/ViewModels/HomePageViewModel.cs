@@ -17,7 +17,7 @@ namespace TaskApp.ViewModels
     {
         public HomePageViewModel()
         {
-            Token = App.SQLiteDB.GetValueConfigUser(Literals.TOKEN);
+            Token = Utils.GetToken();
 
             GetProyectsListAsync();
 
@@ -77,9 +77,24 @@ namespace TaskApp.ViewModels
         public bool IsFailedConection
         {
             get { return isFailedConection; }
-            set { isFailedConection = value; }
+            set
+            {
+                isFailedConection = value;
+                OnPropertyChanged();
+            }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand LogOutCommand { get; set; }
         public ICommand CreateProyectCommand { get; set; }
@@ -127,9 +142,7 @@ namespace TaskApp.ViewModels
                 var response = await client.DeleteAsync(requestUri);
 
                 if (response.StatusCode == HttpStatusCode.OK)
-                {
                     GetProyectsListAsync();
-                }
                 else if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
@@ -137,9 +150,7 @@ namespace TaskApp.ViewModels
                     MessagingCenter.Send(this, Literals.GoToLoginPage);
                 }
                 else
-                {
                     IsFailedConection = true;
-                }
             }
 
         }
@@ -160,35 +171,45 @@ namespace TaskApp.ViewModels
 
         private async void GetProyectsListAsync()
         {
+            IsLoading = true;
+
             Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi");
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add(Literals.TOKEN, Token);
 
-            var response = await client.GetAsync(requestUri);
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                ProyectsList = JsonConvert.DeserializeObject<ObservableCollection<Proyect>>(await response.Content.ReadAsStringAsync());
-                if (ProyectsList.Count > 0)
-                {
-                    IsFullList = true;
-                    IsEmptyList = false;
-                }
-                else
-                {
-                    IsFullList = false;
-                    IsEmptyList = true;
-                }
-            } else if(response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+                var response = await client.GetAsync(requestUri);
 
-                MessagingCenter.Send(this, Literals.GoToLoginPage);
-            } else
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    ProyectsList = JsonConvert.DeserializeObject<ObservableCollection<Proyect>>(await response.Content.ReadAsStringAsync());
+                    if (ProyectsList.Count > 0)
+                    {
+                        IsFullList = true;
+                        IsEmptyList = false;
+                    }
+                    else
+                    {
+                        IsFullList = false;
+                        IsEmptyList = true;
+                    }
+                }
+                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    await App.SQLiteDB.RemoveConfigUserAsync(Literals.TOKEN);
+
+                    MessagingCenter.Send(this, Literals.GoToLoginPage);
+                }
+
+            }
+            catch
             {
                 IsFailedConection = true;
             }
+
+            IsLoading = false;
         }
     }
 }

@@ -11,7 +11,7 @@
     
     <StackLayout>
         <Label Text="Iniciar Sesion"
-               TextColor="#024A86"
+               TextColor="{x:StaticResource Key=PrimaryColor}"
                FontAttributes="Bold"
                FontSize="24"
                CharacterSpacing="1.5"
@@ -66,7 +66,7 @@
 
         <ActivityIndicator IsVisible="{Binding IsLoading}"
                            IsRunning="{Binding IsLoading}"
-                           Color="#024A86"
+                           Color="{x:StaticResource Key=PrimaryColor}"
                            Margin="0, 0, 0, 10" />
 
         <Grid Margin="10"
@@ -82,7 +82,7 @@
             <Button Text="Iniciar Sesion"
                     Command="{Binding LogginCommand}"
                     Grid.Column="0"
-                    BackgroundColor="#024A86"
+                    BackgroundColor="{x:StaticResource Key=PrimaryColor}"
                     TextColor="White"/>
 
             <Button Text="Crear usuario"
