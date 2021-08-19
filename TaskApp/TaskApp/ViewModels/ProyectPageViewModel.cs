@@ -26,6 +26,7 @@ namespace TaskApp.ViewModels
             CreateTaskPageCommand = new Command(CreateTaskPageCommandExecute);
             UpdateTaskCommand = new Command(UpdateTaskCommandExecute);
             ShowOrHideTaskCompletedCommand = new Command(ShowOrHideTaskCompletedCommandExecute);
+            SharedProyectCommand = new Command(SharedProyectCommandExecute);
 
             MessagingCenter.Subscribe<CreateTaskPageViewModel>(this, Literals.ReloadPage, (sender) =>
             {
@@ -115,6 +116,7 @@ namespace TaskApp.ViewModels
         public ICommand CreateTaskPageCommand { get; }
         public ICommand UpdateTaskCommand { get; }
         public ICommand ShowOrHideTaskCompletedCommand { get; set; }
+        public ICommand SharedProyectCommand { get; set; }
 
         private void CreateTaskPageCommandExecute(object obj)
         {
@@ -195,6 +197,11 @@ namespace TaskApp.ViewModels
                 MessagingCenter.Send(this, Literals.GoToLoginPage);
             }
 
+        }
+
+        private void SharedProyectCommandExecute(object obj)
+        {
+            MessagingCenter.Send(this, Literals.GoToSharedProyectPage);
         }
     }
 }

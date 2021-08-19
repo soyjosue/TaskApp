@@ -24,6 +24,11 @@ namespace TaskApp.Views
             {
                 await Navigation.PushAsync(new CreateTaskPage(proyect.Id.ToString()));
             });
+
+            MessagingCenter.Subscribe<ProyectPageViewModel>(this, Literals.GoToSharedProyectPage, async (sender) =>
+            {
+                await Navigation.PushAsync(new SharedProyectPage(proyect));
+            });
         }
     }
 }

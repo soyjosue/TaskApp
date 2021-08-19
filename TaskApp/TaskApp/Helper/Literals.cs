@@ -16,10 +16,13 @@ namespace TaskApp.Helper
         public static string GoToCreateTaskPage = "GoToCreateTaskPage";
         public static string ReloadPage = "ReloadPage";
         public static string CheckBoxCheckedChanged = "CheckBoxCheckedChanged";
+        public static string GoToSharedProyectPage = "GoToSharedProyectPage";
+        public static string GoToPeopleListPage = "GoToSharedProyectPage";
 
         // APPLICATION ELEMENTS
         public static string TOKEN = "Authorization";
         public static string EMAIL = "email";
         public static string PASSWORD = "password";
+
     }
 }

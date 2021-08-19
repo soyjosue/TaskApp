@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:custom="clr-namespace:TaskApp.Custom"
+             x:Class="TaskApp.Views.PeopleListPage"
+             Title="Lista de Personas">
+    
+    <ContentPage.Content>
+        <StackLayout Margin="10">
+            <Label Text="Lista de Personas"
+                   TextColor="{x:StaticResource Key=PrimaryColor}" 
+                   FontAttributes="Bold"
+                   FontSize="22"
+                   HorizontalTextAlignment="Center"/>
+
+            <ListView ItemsSource="{Binding Users}"
+                      HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <custom:CustomViewCell>
+                            <StackLayout>
+                                <Label TextColor="Black"
+                                       FontSize="22"
+                                       FontAttributes="Bold">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="Name" />
+                                            <Binding Path="Lastname" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+
+                                <Label Text="{Binding Email}"
+                                       TextColor="{x:StaticResource Key=PrimaryColor}"
+                                       FontSize="18"/>
+
+                                <Button Text="Eliminar"
+                                        BackgroundColor="Red"
+                                        TextColor="White"
+                                        Margin="20"/>
+                            </StackLayout>
+                        </custom:CustomViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+    
+</ContentPage>

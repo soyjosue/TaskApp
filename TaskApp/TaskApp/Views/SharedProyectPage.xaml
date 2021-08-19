@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskApp.Views.SharedProyectPage"
+             xmlns:forms="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
+             Title="Compartir Proyecto">
+
+    <ContentPage.ToolbarItems>
+        
+        <ToolbarItem Text="Lista de Personas"
+                     Icon="IconPeople.png"
+                     Command="{Binding PeopleListPageCommand}"/>
+        
+    </ContentPage.ToolbarItems>
+    
+    <ScrollView>
+        <StackLayout Padding="10, 20, 10, 20">
+            <Label Text="{Binding ProyectTitle, StringFormat='Proyecto: {0}'}"
+                   FontSize="22"
+                   TextColor="{x:StaticResource Key=PrimaryColor}"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+
+            <Grid Margin="0, 20, 0, 20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Compartido"
+                       Grid.Column="0"
+                       TextColor="Black"
+                       FontSize="22"/>
+                <CheckBox Grid.Column="1" />
+            </Grid>
+
+            <Label Text="Codigo: "
+                   FontSize="22"
+                   TextColor="{x:StaticResource Key=PrimaryColor}"
+                   FontAttributes="Bold"/>
+            <Label Text="{Binding SharedCode}"
+                   TextColor="Black"
+                   FontSize="18"/>
+
+            <Label Text="Contraseña: "
+                   FontSize="22"
+                   TextColor="{x:StaticResource Key=PrimaryColor}"
+                   FontAttributes="Bold"/>
+            <Label Text="{Binding PasswordShared}"
+                   TextColor="Black"
+                   FontSize="18"/>
+
+            <forms:ZXingBarcodeImageView
+                IsVisible="true"
+                BarcodeFormat="QR_CODE"
+                BarcodeValue="{Binding BarcodeValue}"
+                HeightRequest="300"
+                WidthRequest="300">
+                <zx:ZXingBarcodeImageView.BarcodeOptions>
+                    <zxcm:EncodingOptions Width="300" Height="300" />
+                </zx:ZXingBarcodeImageView.BarcodeOptions>
+            </forms:ZXingBarcodeImageView>
+
+            <Button Text="Cambiar Contraseña"
+                    BackgroundColor="{x:StaticResource Key=PrimaryColor}"
+                    TextColor="White" 
+                    Margin="0, 20, 0, 20" />
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>
