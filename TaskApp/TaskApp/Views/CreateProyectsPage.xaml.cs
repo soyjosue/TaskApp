@@ -23,6 +23,11 @@ namespace TaskApp.Views
                 await Navigation.PopAsync();
             });
 
+            MessagingCenter.Subscribe<CreateProyectPageViewModel>(this, Literals.GoToQRScannerPage, async (a) =>
+            {
+                await Navigation.PushAsync(new QRScannerPage());
+            });
+
         }
     }
 }

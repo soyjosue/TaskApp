@@ -7,6 +7,12 @@
         <viewmodels:CreateProyectPageViewModel />
     </ContentPage.BindingContext>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Scanear QR"
+                     Icon="IconQR.png"
+                     Command="{Binding CodigoQRCommand}" />
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
             <StackLayout>
             <Grid Margin="20">

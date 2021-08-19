@@ -18,6 +18,7 @@ namespace TaskApp.Helper
         public static string CheckBoxCheckedChanged = "CheckBoxCheckedChanged";
         public static string GoToSharedProyectPage = "GoToSharedProyectPage";
         public static string GoToPeopleListPage = "GoToSharedProyectPage";
+        public static string GoToQRScannerPage = "GoToQRScannerPage";
 
         // APPLICATION ELEMENTS
         public static string TOKEN = "Authorization";

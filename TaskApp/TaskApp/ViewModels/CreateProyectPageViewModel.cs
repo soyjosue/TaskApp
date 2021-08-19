@@ -61,10 +61,17 @@ namespace TaskApp.ViewModels
         }
 
         public ICommand SaveProyectCommand { get; set; }
+        public ICommand CodigoQRCommand { get; set; }
 
         public CreateProyectPageViewModel()
         {
             SaveProyectCommand = new Command(SaveProyectCommandExecute);
+            CodigoQRCommand = new Command(CodigoQRCommandExecute);
+        }
+
+        private void CodigoQRCommandExecute(object obj)
+        {
+            MessagingCenter.Send(this, Literals.GoToQRScannerPage);
         }
 
         private async void SaveProyectCommandExecute(object obj)
