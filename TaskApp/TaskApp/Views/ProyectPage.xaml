@@ -14,12 +14,14 @@
                      CommandParameter="{x:Reference tbiShowOrHide}"
                      Icon="IconCompleteWhite.png"/>
         
-        <ToolbarItem Text="Compartir Proyecto"
+        <custom:HideableToolbarItem Text="Compartir Proyecto"
                      Order="Secondary"
-                     Command="{Binding SharedProyectCommand}" />
+                     Command="{Binding SharedProyectCommand}"
+                     IsVisible="{Binding IsEnabledItem}"/>
 
-        <ToolbarItem Text="Ver Registro"
-                     Order="Secondary"/>
+        <custom:HideableToolbarItem Text="Ver Registro"
+                     Order="Secondary"
+                     IsVisible="{Binding IsEnabledItem}"/>
 
         <ToolbarItem Text="Agregar Tarea"
                      Command="{Binding CreateTaskPageCommand}"

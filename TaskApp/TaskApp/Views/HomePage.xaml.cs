@@ -35,6 +35,12 @@ namespace TaskApp.Views
             });
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            MessagingCenter.Send(this, Literals.ReloadPage);
+        }
+
         private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             var vm = BindingContext as HomePageViewModel;

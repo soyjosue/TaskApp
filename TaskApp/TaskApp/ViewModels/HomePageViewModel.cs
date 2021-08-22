@@ -19,14 +19,12 @@ namespace TaskApp.ViewModels
         {
             Token = Utils.GetToken();
 
-            GetProyectsListAsync();
-
             LogOutCommand = new Command(LogOutCommandExecute);
             CreateProyectCommand = new Command(CreateProyectCommandExecute);
             ShowProyectCommand = new Command(ShowProyectCommandExecute);
             DeleteProyectCommand = new Command(DeleteProyectCommandExecute);
 
-            MessagingCenter.Subscribe<CreateProyectsPage>(this, Literals.ReloadPage, (a) =>
+            MessagingCenter.Subscribe<HomePage>(this, Literals.ReloadPage, (a) =>
             {
                 GetProyectsListAsync();
             });
@@ -96,6 +94,7 @@ namespace TaskApp.ViewModels
             }
         }
 
+
         public ICommand LogOutCommand { get; set; }
         public ICommand CreateProyectCommand { get; set; }
         public ICommand DeleteProyectCommand { get; set; }
@@ -130,6 +129,43 @@ namespace TaskApp.ViewModels
         {
             var proyect = obj as Proyect;
 
+            var user = await Helper.Utils.GetUser();
+
+            if (proyect.UserId == user.Id)
+                DeleteProyect(proyect);
+            else
+                RemoveMember(proyect, user);
+        }
+
+        private async void RemoveMember(Proyect proyect, User user)
+        {
+            var resultMessageConfirm = await Application.Current.MainPage.DisplayAlert("Dejar de ser miembro", $"Estas seguro de dejar de ser miembro del proyecto: {proyect.Title}?", "Si", "No");
+
+            if (resultMessageConfirm)
+            {
+
+                Uri uriRequest = new Uri($"{Literals.WEBAPIKEY}/ProyectApi/RemoveMember/{proyect.Id}/{user.Id}");
+
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add(Literals.TOKEN, Utils.GetToken());
+
+                try
+                {
+                    var response = await client.DeleteAsync(uriRequest);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        GetProyectsListAsync();
+                }
+                catch
+                {
+
+                }
+            }
+
+        }
+
+        private async void DeleteProyect(Proyect proyect)
+        {
             var resultMessageConfirm = await Application.Current.MainPage.DisplayAlert("Eliminar Proyecto", $"Estas seguro de eliminar el proyecto: {proyect.Title}?", "Si", "No");
 
             if (resultMessageConfirm)
@@ -152,7 +188,6 @@ namespace TaskApp.ViewModels
                 else
                     IsFailedConection = true;
             }
-
         }
 
         private async void LogOutCommandExecute(object obj)
@@ -172,6 +207,8 @@ namespace TaskApp.ViewModels
         private async void GetProyectsListAsync()
         {
             IsLoading = true;
+            ProyectsList = null;
+            IsFailedConection = false;
 
             Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi");
 
@@ -189,6 +226,11 @@ namespace TaskApp.ViewModels
                     {
                         IsFullList = true;
                         IsEmptyList = false;
+
+                        if (ProyectsList.Count == 0)
+                        {
+                            IsFullList = false;
+                        }
                     }
                     else
                     {

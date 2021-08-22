@@ -19,7 +19,6 @@ namespace TaskApp.Views
 
             MessagingCenter.Subscribe<CreateProyectPageViewModel>(this, Literals.GoToHomePage, async (a) =>
             {
-                MessagingCenter.Send(this, Literals.ReloadPage);
                 await Navigation.PopAsync();
             });
 

@@ -7,7 +7,9 @@
     <ContentPage.Content>
         <Grid VerticalOptions="CenterAndExpand"
               HorizontalOptions="CenterAndExpand">
-            <zxing:ZXingScannerView IsScanning="True"
+            <zxing:ZXingScannerView x:Name="scanner"
+                    IsScanning="True"
+                                    OnScanResult="ZXingScannerView_OnScanResult"
                                     VerticalOptions="CenterAndExpand"
                                     HorizontalOptions="CenterAndExpand"/>
         </Grid>

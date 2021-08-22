@@ -21,6 +21,8 @@ namespace TaskApp.ViewModels
             ProyectName = proyect.Title;
             IdProyect = proyect.Id.ToString();
 
+            IsTheUserOwner(proyect);
+
             GetTaksListAsync();
 
             CreateTaskPageCommand = new Command(CreateTaskPageCommandExecute);
@@ -32,6 +34,16 @@ namespace TaskApp.ViewModels
             {
                 GetTaksListAsync();
             });
+        }
+
+        private async void IsTheUserOwner(Proyect proyect)
+        {
+            var userToken = await Utils.GetUser();
+
+            if (proyect.UserId == userToken.Id)
+                IsEnabledItem = true;
+            else
+                IsEnabledItem = false;
         }
 
         private void ShowOrHideTaskCompletedCommandExecute(object obj)
@@ -63,6 +75,18 @@ namespace TaskApp.ViewModels
 
         public string IdProyect { get; set; }
         public string ProyectName { get; set; }
+
+        private bool isEnabledItem = true;
+
+        public bool IsEnabledItem
+        {
+            get { return isEnabledItem; }
+            set
+            {
+                isEnabledItem = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<Task> tasksList;
 

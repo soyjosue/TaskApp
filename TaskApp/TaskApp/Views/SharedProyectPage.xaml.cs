@@ -22,7 +22,7 @@ namespace TaskApp.Views
 
             MessagingCenter.Subscribe<SharedProyectPageViewModel>(this, Literals.GoToPeopleListPage, async (s) =>
             {
-                await Navigation.PushAsync(new PeopleListPage());
+                await Navigation.PushAsync(new PeopleListPage(proyect));
             });
         }
     }

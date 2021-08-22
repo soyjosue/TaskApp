@@ -39,6 +39,32 @@ namespace TaskApp.ViewModels
             }
         }
 
+        private bool isLoading;
+
+        public bool IsLoading
+        {
+            get { return isLoading; }
+            set
+            {
+                isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isFailedConection;
+
+        public bool IsFailedConection
+        {
+            get { return isFailedConection; }
+            set
+            {
+                isFailedConection = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
         public string ProyectTitle { get; set; }
 
         public ICommand PeopleListPageCommand { get; set; }
@@ -54,6 +80,11 @@ namespace TaskApp.ViewModels
 
         private async void ChangeCodeCommandExecute(object obj)
         {
+            var isCorrect = await Application.Current.MainPage.DisplayAlert("Cambiar codigo QR", "Estas seguro de cambiar el codigo QR?", "Si", "No");
+
+            if (!isCorrect)
+                return;
+
             Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi/Shared/{SharedCodeId}");
 
             var client = new HttpClient();
@@ -70,12 +101,16 @@ namespace TaskApp.ViewModels
             }
             catch
             {
-
+                await Application.Current.MainPage.DisplayAlert("No se pudo cambiar el QR", "Verifique su conexión a internet.", "OK");
             }
         }
 
         private async void GetCodeShared()
         {
+            IsFailedConection = false;
+            IsLoading = true;
+            BarcodeValue = null;
+
             Uri requestUri = new Uri($"{Literals.WEBAPIKEY}/ProyectApi/Shared/{ProyectId}");
 
             var client = new HttpClient();
@@ -88,18 +123,19 @@ namespace TaskApp.ViewModels
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     var sharedProyect = JsonConvert.DeserializeObject<SharedProyect>(await response.Content.ReadAsStringAsync());
-                    BarcodeValue = JsonConvert.SerializeObject(new
+                    BarcodeValue = JsonConvert.SerializeObject(new SharedProyect
                     {
-                        sharedCode = sharedProyect.Code,
-                        passwordShared = sharedProyect.CodePassword
+                        Code = sharedProyect.Code,
+                        CodePassword = sharedProyect.CodePassword
                     });
                     SharedCodeId = sharedProyect.Id;
                 }
             }
             catch
             {
-
+                IsFailedConection = true;
             }
+            IsLoading = false;
         }
     }
 }
